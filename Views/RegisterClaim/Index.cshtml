@@ -1,0 +1,206 @@
+﻿@model RegisterClaim.Models.RegisterClass1
+
+
+
+@{
+    ViewBag.Title = "Register Claim";
+}
+<link href="~/Content/Site.css" rel="stylesheet" />
+<link href="~/Content/jQueryUI.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("Index", "RegisterClaim", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="form-horizontal">
+        <h4>Register Claim</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.CardNumber, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="">
+                    @Html.DropDownListFor(model => model.MyEmployee.CardNumber,ViewBag.NumberList as SelectList,"--Select CardNumber--", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.MyEmployee.Employees, ViewBag.EmpList as SelectList, "--Select Employee--", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.PatientName, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.MyDependents.DependentName,ViewBag.dependentsTable as SelectList, "--Select Patients--", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PatientName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.DiseaseName, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.AllDisease.DiseaseName,ViewBag.diseaseTable as SelectList,"--Select Disease--", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DiseaseName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.DiseaseCode, htmlAttributes: new { @class = "control-label col-md-9" })
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.AllDisease.DiseaseCode,ViewBag.codeTable as SelectList,"--Disease Code--", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DiseaseCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.MedicalRecordNumber, htmlAttributes: new { @class = "control-label col-md-9" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.MedicalRecordNumber, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MedicalRecordNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.ClaimCategory, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.Label("Maternity")
+                    @Html.RadioButtonFor(model => model.ClaimCategory, "M")
+                    @Html.ValidationMessageFor(model => model.ClaimCategory, "", new { @class = "text-danger" })
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <br />
+                    @Html.Label("Hospitalization")
+                    @Html.RadioButtonFor(model => model.ClaimCategory, "H")
+                    @Html.ValidationMessageFor(model => model.ClaimCategory, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.HospitalName, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.DropDownListFor(model => model.AllHospitals.HospitalName,ViewBag.hospitalTable as SelectList,"--Select Hospital", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.HospitalName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.HospitalID, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.HospitalID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.HospitalID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.Approval_Amount, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Approval_Amount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Approval_Amount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="offset-3 col-md-6">
+                <br />
+                @Html.LabelFor(model => model.TreatingConsultant, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="form-group">
+                    @Html.Label("Yes")
+                    @Html.RadioButtonFor(model => model.TreatingConsultant, "Y")
+                    @Html.Label("No")
+                    @Html.RadioButtonFor(model => model.TreatingConsultant, "N")
+                    @Html.ValidationMessageFor(model => model.TreatingConsultant, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                @Html.LabelFor(model => model.CreatedDate, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.CreatedDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.FileName, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="form-group">
+                    @Html.TextBoxFor(model => model.FileName, "", new { @type = "file", @multiple = "multiple" })
+
+                    @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
+                    <p> @ViewBag.message</p>
+
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model => model.Contact, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.ExternalRemarks, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="form-group">
+                        @Html.TextAreaFor(model => model.ExternalRemarks, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ExternalRemarks, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.InternalRemarks, htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="form-group">
+                        @Html.TextAreaFor(model => model.InternalRemarks, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.InternalRemarks, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <input type="submit" value="Register" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @Html.ViewData["Message"]
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script src="~/Scripts/jQuery.js"></script>
+<script src="~/Scripts/jQueryDatePicker-1.js"></script>
+<script src="~/Scripts/jQueryDatePicker-2.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $("#CreatedDate").datepicker({
+            dateFormat: "dd-mm-yy",
+            minDate: -6,
+            maxDate: "+0M +0D"
+
+        });
+    });
+</script>
