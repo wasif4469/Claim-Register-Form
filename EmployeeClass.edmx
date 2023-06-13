@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Hospital_MSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AllEmployees">
+          <Key>
+            <PropertyRef Name="EmpID" />
+          </Key>
+          <Property Name="EmpID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CardNumber" Type="varchar" MaxLength="50" />
+          <Property Name="Employees" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Dependents">
+          <Key>
+            <PropertyRef Name="DependentsID" />
+          </Key>
+          <Property Name="DependentsID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmpID" Type="int" />
+          <Property Name="DependentName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__Dependent__EmpID__6383C8BA">
+          <End Role="AllEmployees" Type="Self.AllEmployees" Multiplicity="0..1" />
+          <End Role="Dependents" Type="Self.Dependents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AllEmployees">
+              <PropertyRef Name="EmpID" />
+            </Principal>
+            <Dependent Role="Dependents">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Hospital_MSModelStoreContainer">
+          <EntitySet Name="AllEmployees" EntityType="Self.AllEmployees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dependents" EntityType="Self.Dependents" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Dependent__EmpID__6383C8BA" Association="Self.FK__Dependent__EmpID__6383C8BA">
+            <End Role="AllEmployees" EntitySet="AllEmployees" />
+            <End Role="Dependents" EntitySet="Dependents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Hospital_MSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AllEmployee">
+          <Key>
+            <PropertyRef Name="EmpID" />
+          </Key>
+          <Property Name="EmpID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Employees" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Dependents" Relationship="Self.FK__Dependent__EmpID__6383C8BA" FromRole="AllEmployees" ToRole="Dependents" />
+        </EntityType>
+        <EntityType Name="Dependent">
+          <Key>
+            <PropertyRef Name="DependentsID" />
+          </Key>
+          <Property Name="DependentsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmpID" Type="Int32" />
+          <Property Name="DependentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AllEmployee" Relationship="Self.FK__Dependent__EmpID__6383C8BA" FromRole="Dependents" ToRole="AllEmployees" />
+        </EntityType>
+        <Association Name="FK__Dependent__EmpID__6383C8BA">
+          <End Role="AllEmployees" Type="Self.AllEmployee" Multiplicity="0..1" />
+          <End Role="Dependents" Type="Self.Dependent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AllEmployees">
+              <PropertyRef Name="EmpID" />
+            </Principal>
+            <Dependent Role="Dependents">
+              <PropertyRef Name="EmpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Hospital_MSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AllEmployees" EntityType="Self.AllEmployee" />
+          <EntitySet Name="Dependents" EntityType="Self.Dependent" />
+          <AssociationSet Name="FK__Dependent__EmpID__6383C8BA" Association="Self.FK__Dependent__EmpID__6383C8BA">
+            <End Role="AllEmployees" EntitySet="AllEmployees" />
+            <End Role="Dependents" EntitySet="Dependents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Hospital_MSModelStoreContainer" CdmEntityContainer="Hospital_MSEntities">
+          <EntitySetMapping Name="AllEmployees">
+            <EntityTypeMapping TypeName="Hospital_MSModel.AllEmployee">
+              <MappingFragment StoreEntitySet="AllEmployees">
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="Employees" ColumnName="Employees" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dependents">
+            <EntityTypeMapping TypeName="Hospital_MSModel.Dependent">
+              <MappingFragment StoreEntitySet="Dependents">
+                <ScalarProperty Name="DependentsID" ColumnName="DependentsID" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="DependentName" ColumnName="DependentName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
