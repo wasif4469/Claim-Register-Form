@@ -1,0 +1,80 @@
+name: Generate README via OpenRouter
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run OpenRouter README Script
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python -c '
+          import os
+          import json
+          import requests
+
+          # Folder structure compile karna
+          structure = []
+          for root, dirs, files in os.walk("."):
+              # Ignore hidden folders aur build artifacts
+              dirs[:] = [d for d in dirs if not d.startswith(".") and d not in ["bin", "obj", "node_modules"]]
+              for f in files:
+                  if not f.startswith("."):
+                      structure.append(os.path.join(root, f))
+          
+          file_list = "\n".join(structure[:100]) # Limit to 100 files max for context
+
+          prompt = f"Act as a professional technical writer. Generate a comprehensive, beautiful, and well-formatted README.md markdown file for a repository that contains the following files:\n\n{file_list}\n\nInclude sections: Project Title, Description, Tech Stack (deduced from files like .csproj or package.json), Installation, and Features."
+
+          url = "https://openrouter.ai/api/v1/chat/completions"
+          
+          # F-string se backslash hatane ke liye direct variable use kiya hai
+          api_key = os.environ.get("OPENROUTER_API_KEY")
+          headers = {
+              "Authorization": f"Bearer {api_key}",
+              "Content-Type": "application/json"
+          }
+          
+          data = {
+              "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+              "messages": [{"role": "user", "content": prompt}]
+          }
+
+          print("Sending request to OpenRouter...")
+          response = requests.post(url, headers=headers, json=data)
+          
+          if response.status_code == 200:
+              readme_content = response.json()["choices"][0]["message"]["content"]
+              with open("README.md", "w", encoding="utf-8") as f:
+                  f.write(readme_content)
+              print("README.md successfully generated!")
+          else:
+              print(f"Error from OpenRouter: {response.status_code}")
+              print(response.text)
+              exit(1)
+          '
+
+      - name: Commit and Push README
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff-index --quiet HEAD || git commit -m "docs: auto-generate README.md via OpenRouter"
+          git push
